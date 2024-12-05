@@ -49,7 +49,7 @@ async function getSongs(folder) {
             `<li>
                             <img class="invert" src="img/music.svg" alt="">
                             <div class="info">
-                                <div>${song.replaceAll("%20", " ")}</div>
+                                <div>${decodeURIComponent(song)}</div>
                                 <div>Vivek</div>
                             </div>
                             <div class="playnow">
@@ -117,7 +117,7 @@ async function displayAlbums() {
     //Load the playlist whenever card is clicked
     Array.from(document.getElementsByClassName("card")).forEach(e => {
         e.addEventListener("click", async item => {
-            songs = await getSongs(`songs/${item.currentTarget.dataset.folder}`)
+            songs = await getSongs(`Songs/${item.currentTarget.dataset.folder}`)
             playMusic(songs[0])
         })
     })
