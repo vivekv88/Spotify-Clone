@@ -25,28 +25,29 @@ function convertSecondsToMinutes(seconds) {
 }
 async function getSongs(folder) {
     currFolder = folder
-    let a = await fetch(`./${folder}/`)
-    let response = await a.text()
-    // console.log(response)
-    
-    let div = document.createElement("div")
-    div.innerHTML = response;
-    let as = div.getElementsByTagName("a")
-    songs = []
-    for (let index = 0; index < as.length; index++) {
-        const element = as[index];
-        if (element.href.endsWith(".mp3")) {
-            songs.push(element.href.split(`/${folder}/`)[1])
-        }
-    }
-    // return songs
-    // Show all the songs in the playlist
-    let songUl = document.querySelector(".songlist").getElementsByTagName("ul")[0]
-    songUl.innerHTML = ""
-    for (const song of songs) {
-        songUl.innerHTML = songUl.innerHTML +
+    try {
+        let a = await fetch(`${folder}/`)
+        console.log(a);
+        
+        let response = await a.text()
+        let div = document.createElement("div")
+        div.innerHTML = response;
+        let as = div.getElementsByTagName("a")
+        songs = []
+        for (let index = 0; index < as.length; index++) {
+            const element = as[index];
+            if (element.href.endsWith(".mp3")) {
+                songs.push(element.href.split(`/${folder}/`)[1])
+            }
+        } 
 
-            `<li>
+
+        let songUl = document.querySelector(".songlist").getElementsByTagName("ul")[0]
+        songUl.innerHTML = ""
+        for (const song of songs) {
+            songUl.innerHTML = songUl.innerHTML +
+
+                `<li>
                             <img class="invert" src="img/music.svg" alt="">
                             <div class="info">
                                 <div>${decodeURIComponent(song)}</div>
@@ -57,17 +58,21 @@ async function getSongs(folder) {
                                 <img src="img/play.svg" alt="">
                             </div>
                         </li>`
-    }
+        }
 
-    
-    //Attach event listener to each song
-    Array.from(document.querySelector(".songlist").getElementsByTagName("li")).forEach(e => {
-        e.addEventListener("click", element => {
-            // console.log(e.querySelector(".info").firstElementChild.innerHTML)
-            playMusic(e.querySelector(".info").firstElementChild.innerHTML.trim())
+
+        //Attach event listener to each song
+        Array.from(document.querySelector(".songlist").getElementsByTagName("li")).forEach(e => {
+            e.addEventListener("click", element => {
+                // console.log(e.querySelector(".info").firstElementChild.innerHTML)
+                playMusic(e.querySelector(".info").firstElementChild.innerHTML.trim())
+            })
+
         })
-
-    })
+    }catch(error){
+        console.error("Failed to fetch songs:", error);
+        alert("Failed to load songs. Check if the folder and files exist and are accessible.");
+    }
 
     return songs
 }
