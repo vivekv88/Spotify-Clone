@@ -1,9 +1,4 @@
 
-const express = require('express')
-
-const app = express();
-
-app.use(express.static('public'));
 
 
 let currentsong = new Audio()
@@ -33,7 +28,7 @@ function convertSecondsToMinutes(seconds) {
 async function getSongs(folder) {
     currFolder = folder
     try {
-        let a = await fetch(`/${folder}/`)
+        let a = await fetch(`${folder}/`)
         console.log(a);
         
         let response = await a.text()
